@@ -6,6 +6,8 @@ import 'package:we_chat/models/chat_user.dart';
 import 'package:we_chat/screens/profile_screen.dart';
 
 import '../widgets/chat_user_card.dart';
+import 'auth/login_screen.dart';
+import 'package:we_chat/helper/dialoges.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -15,64 +17,133 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<ChatUser> list = [];
+  List<ChatUser> _list = [];
+  final List<ChatUser> _searchList = [];
+  bool _isSearching = false;
+  @override
+  void initState() {
+    super.initState();
+    APIs.getSelfInfo();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("We Chat"),
-        leading: const Icon(CupertinoIcons.home),
-        actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
-          IconButton(
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (_) => ProfileScreen(
-                              user: list[0],
-                            )));
-              },
-              icon: const Icon(Icons.more_vert))
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-          onPressed: () async {
-            await APIs.auth.signOut();
-            // ignore: await_only_futures
-            await GoogleSignIn().signOut;
-          },
-          child: const Icon(Icons.add_comment_rounded)),
-      body: StreamBuilder(
-        stream: APIs.firestore.collection('user').snapshots(),
-        builder: (context, snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.waiting:
-            case ConnectionState.none:
-              return const Center(child: CircularProgressIndicator());
-            case ConnectionState.active:
-            case ConnectionState.done:
-              final data = snapshot.data?.docs;
-              list =
-                  data?.map((e) => ChatUser.fromJson(e.data())).toList() ?? [];
-
-              if (list.isNotEmpty) {
-                return ListView.builder(
-                    itemCount: list.length,
-                    physics: const BouncingScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      return ChatUserCard(user: list[index]);
-                    });
-              } else {
-                const Center(
-                    child: Text(
-                  "No Connections Found",
-                  style: TextStyle(fontSize: 22),
-                ));
-              }
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: WillPopScope(
+        onWillPop: () {
+          if (_isSearching) {
+            setState(() {
+              _isSearching = !_isSearching;
+            });
+            return Future.value(false);
+          } else {
+            return Future.value(true);
           }
-          throw '';
         },
+        child: Scaffold(
+          appBar: AppBar(
+            title: _isSearching
+                ? TextField(
+                    decoration: InputDecoration(
+                        border: InputBorder.none, hintText: 'Name, Email,....'),
+                    autofocus: true,
+                    style: TextStyle(fontSize: 18, letterSpacing: 0.6),
+                    onChanged: (val) {
+                      _searchList.clear();
+                      for (var i in _list) {
+                        if (i.name.toLowerCase().contains(val.toLowerCase()) ||
+                            i.email.toLowerCase().contains(val.toLowerCase())) {
+                          _searchList.add(i);
+                        }
+                        setState(() {
+                          _searchList;
+                        });
+                      }
+                    },
+                  )
+                : Text("We Chat"),
+            shadowColor: Colors.black54,
+            elevation: 2.7,
+            leading: const Icon(CupertinoIcons.home),
+            actions: [
+              IconButton(
+                  onPressed: () {
+                    setState(() {
+                      _isSearching = !_isSearching;
+                    });
+                  },
+                  icon: Icon(_isSearching
+                      ? CupertinoIcons.clear_circled
+                      : Icons.search)),
+              IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => ProfileScreen(
+                                  user: APIs.me,
+                                )));
+                  },
+                  icon: const Icon(Icons.more_vert))
+            ],
+          ),
+          floatingActionButton: FloatingActionButton.extended(
+            onPressed: () async {
+              dialogs.showProgressBar(context);
+
+              await APIs.auth.signOut().then((value) async {
+                await GoogleSignIn().signOut().then((value) {
+                  //replacing home screen with login screen
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (_) => const LoginScreen()));
+                });
+              });
+            },
+            backgroundColor: Colors.redAccent,
+            icon: const Icon(Icons.login_outlined),
+            label: const Text(
+              "Logout",
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+          body: StreamBuilder(
+            stream: APIs.getAllUsers(),
+            builder: (context, snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.waiting:
+                case ConnectionState.none:
+                  return const Center(child: CircularProgressIndicator());
+                case ConnectionState.active:
+                case ConnectionState.done:
+                  final data = snapshot.data?.docs;
+                  _list =
+                      data?.map((e) => ChatUser.fromJson(e.data())).toList() ??
+                          [];
+
+                  if (_list.isNotEmpty) {
+                    return ListView.builder(
+                        itemCount:
+                            _isSearching ? _searchList.length : _list.length,
+                        physics: const BouncingScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          return ChatUserCard(
+                              user: _isSearching
+                                  ? _searchList[index]
+                                  : _list[index]);
+                        });
+                  } else {
+                    const Center(
+                        child: Text(
+                      "No Connections Found",
+                      style: TextStyle(fontSize: 22),
+                    ));
+                  }
+              }
+              throw '';
+            },
+          ),
+        ),
       ),
     );
   }

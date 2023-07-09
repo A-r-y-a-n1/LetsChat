@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:we_chat/api/api.dart';
@@ -21,24 +20,20 @@ class _SplashScreenState extends State<SplashScreen> {
     Future.delayed(const Duration(seconds: 2), () {
       SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
       SystemChrome.setSystemUIOverlayStyle(
-          const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
-      if(APIs.auth.currentUser != null){
+          const SystemUiOverlayStyle(systemNavigationBarColor: Colors.white));
+      if (APIs.auth.currentUser != null) {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (_) => const HomeScreen()));
-      }
-      else{
+      } else {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (_) => const LoginScreen()));
       }
-
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    mq = MediaQuery
-        .of(context)
-        .size;
+    mq = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
           automaticallyImplyLeading: false,
