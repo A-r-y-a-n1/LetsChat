@@ -71,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 : const Align(
                     alignment: AlignmentDirectional(-1, 0),
                     child: Text(
-                      "Let\'s Chat!!",
+                      "Let's Chat!!",
                       style: TextStyle(letterSpacing: 1.3),
                     ),
                   ),
@@ -97,7 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 )));
                   },
                   icon: const Icon(Icons.person_sharp)),
-              SizedBox(width: 9)
+              const SizedBox(width: 9)
             ],
           ),
           // floatingActionButton: FloatingActionButton.extended(

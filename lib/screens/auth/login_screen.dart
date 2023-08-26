@@ -5,7 +5,6 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:we_chat/api/api.dart';
 import 'package:we_chat/helper/dialoges.dart';
 import 'package:we_chat/screens/confetti_screen.dart';
-import 'package:we_chat/screens/home_screen.dart';
 
 import '../../main.dart';
 
@@ -36,16 +35,16 @@ class _LoginScreenState extends State<LoginScreen> {
         if (await (APIs.userExists())) {
           // log('\nUser: ${user.user}');
           // log('\nUserAdditionalInfo: ${user.additionalUserInfo}');
-          Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (_) => const ConfettiScreen()));
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (_) => const ConfettiScreen()));
         } else {
           APIs.createUser().then((value) {
-            Navigator.pushReplacement(
-                context, MaterialPageRoute(builder: (_) => const ConfettiScreen()));
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (_) => const ConfettiScreen()));
           });
         }
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          duration: Duration(milliseconds: 1500),
+          duration: const Duration(milliseconds: 1500),
           content: const Text(
             "Logged in successfully 😃😃",
             style: TextStyle(fontSize: 18),

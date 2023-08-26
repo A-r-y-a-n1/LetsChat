@@ -1,9 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:we_chat/widgets/dialogs/profile_dialog.dart';
-
 import '../helper/my_date_util.dart';
 import '../main.dart';
 import '../models/chat_user.dart';
@@ -11,9 +9,7 @@ import '../models/chat_user.dart';
 //view profile screen -- to view profile of user
 class ViewProfileScreen extends StatefulWidget {
   final ChatUser user;
-
   const ViewProfileScreen({super.key, required this.user});
-
   @override
   State<ViewProfileScreen> createState() => _ViewProfileScreenState();
 }

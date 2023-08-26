@@ -75,7 +75,7 @@ class _ConfettiScreenState extends State<ConfettiScreen> {
             height: mq.height * .66,
             child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromARGB(255, 132, 194, 244)),
+                    backgroundColor: const Color.fromARGB(255, 132, 194, 244)),
                 onPressed: () {
                   Navigator.pushReplacement(context,
                       MaterialPageRoute(builder: (_) => const HomeScreen()));

@@ -39,7 +39,7 @@ class _MessageCardState extends State<MessageCard> {
             decoration: BoxDecoration(
                 color: Colors.lightBlueAccent.shade100,
                 borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: Color.fromARGB(255, 64, 164, 246))),
+                border: Border.all(color: const Color.fromARGB(255, 64, 164, 246))),
             child: widget.message.type == Type.text
                 ? Text(widget.message.msg,
                     style: const TextStyle(fontSize: 15, color: Colors.black87))
