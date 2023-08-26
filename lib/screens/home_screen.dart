@@ -1,13 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter/services.dart';
 import 'package:we_chat/api/api.dart';
 import 'package:we_chat/models/chat_user.dart';
 import 'package:we_chat/screens/profile_screen.dart';
-
 import '../widgets/chat_user_card.dart';
-import 'auth/login_screen.dart';
-import 'package:we_chat/helper/dialoges.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -24,6 +21,15 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     APIs.getSelfInfo();
+    SystemChannels.lifecycle.setMessageHandler((message) {
+      if (message.toString().contains('pause')) {
+        APIs.updateActiveStatus(false);
+      }
+      if (message.toString().contains('resume')) {
+        APIs.updateActiveStatus(true);
+      }
+      return Future.value(message);
+    });
   }
 
   @override
@@ -45,10 +51,10 @@ class _HomeScreenState extends State<HomeScreen> {
           appBar: AppBar(
             title: _isSearching
                 ? TextField(
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                         border: InputBorder.none, hintText: 'Name, Email,....'),
                     autofocus: true,
-                    style: TextStyle(fontSize: 18, letterSpacing: 0.6),
+                    style: const TextStyle(fontSize: 18, letterSpacing: 0.6),
                     onChanged: (val) {
                       _searchList.clear();
                       for (var i in _list) {
@@ -62,10 +68,15 @@ class _HomeScreenState extends State<HomeScreen> {
                       }
                     },
                   )
-                : Text("We Chat"),
-            shadowColor: Colors.black54,
-            elevation: 2.7,
-            leading: const Icon(CupertinoIcons.home),
+                : const Align(
+                    alignment: AlignmentDirectional(-1, 0),
+                    child: Text(
+                      "Let\'s Chat!!",
+                      style: TextStyle(letterSpacing: 1.3),
+                    ),
+                  ),
+            automaticallyImplyLeading: false,
+            elevation: 3,
             actions: [
               IconButton(
                   onPressed: () {
@@ -85,28 +96,29 @@ class _HomeScreenState extends State<HomeScreen> {
                                   user: APIs.me,
                                 )));
                   },
-                  icon: const Icon(Icons.more_vert))
+                  icon: const Icon(Icons.person_sharp)),
+              SizedBox(width: 9)
             ],
           ),
-          floatingActionButton: FloatingActionButton.extended(
-            onPressed: () async {
-              dialogs.showProgressBar(context);
+          // floatingActionButton: FloatingActionButton.extended(
+          //   onPressed: () async {
+          //     dialogs.showProgressBar(context);
 
-              await APIs.auth.signOut().then((value) async {
-                await GoogleSignIn().signOut().then((value) {
-                  //replacing home screen with login screen
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (_) => const LoginScreen()));
-                });
-              });
-            },
-            backgroundColor: Colors.redAccent,
-            icon: const Icon(Icons.login_outlined),
-            label: const Text(
-              "Logout",
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
+          //     await APIs.auth.signOut().then((value) async {
+          //       await GoogleSignIn().signOut().then((value) {
+          //         //replacing home screen with login screen
+          //         Navigator.pushReplacement(context,
+          //             MaterialPageRoute(builder: (_) => const LoginScreen()));
+          //       });
+          //     });
+          //   },
+          //   backgroundColor: Colors.redAccent,
+          //   // icon: const Icon(Icons.login_outlined),
+          //   label: const Text(
+          //     "Logout",
+          //     style: TextStyle(color: Colors.white),
+          //   ),
+          // ),
           body: StreamBuilder(
             stream: APIs.getAllUsers(),
             builder: (context, snapshot) {
@@ -133,14 +145,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                   : _list[index]);
                         });
                   } else {
-                    const Center(
+                    return const Center(
                         child: Text(
                       "No Connections Found",
                       style: TextStyle(fontSize: 22),
                     ));
                   }
               }
-              throw '';
             },
           ),
         ),

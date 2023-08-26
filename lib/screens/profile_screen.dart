@@ -160,6 +160,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       onPressed: () {
                         ScaffoldMessenger.of(context as BuildContext)
                             .showSnackBar(SnackBar(
+                          duration: const Duration(milliseconds: 700),
                           content: const Text(
                             "Profile Updated Successfully",
                             style: TextStyle(fontSize: 18),
@@ -256,7 +257,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                           APIs.updateProfilePicture(File(_image!));
                           // for hiding bottom sheet
-                          Navigator.pop(context as BuildContext);
+                          // ignore: use_build_context_synchronously
+                          Navigator.pop(context);
                         }
                       },
                       child: Image.asset('images/camera.png')),

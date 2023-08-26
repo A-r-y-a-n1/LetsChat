@@ -40,6 +40,12 @@ dependencies:
   cached_network_image: ^3.2.3
   image_picker: ^1.0.0
   firebase_storage: ^11.2.4
+  emoji_picker_flutter: ^1.6.1
+  path_provider: ^2.1.0
+  confetti: ^0.7.0
+  flutter_font_picker: ^1.2.0
+  animated_text_kit: ^4.2.2
+  google_fonts: ^4.0.3
 
 dev_dependencies:
   flutter_test:

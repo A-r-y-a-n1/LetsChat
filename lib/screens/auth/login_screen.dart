@@ -1,10 +1,10 @@
 import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:we_chat/api/api.dart';
 import 'package:we_chat/helper/dialoges.dart';
+import 'package:we_chat/screens/confetti_screen.dart';
 import 'package:we_chat/screens/home_screen.dart';
 
 import '../../main.dart';
@@ -33,15 +33,28 @@ class _LoginScreenState extends State<LoginScreen> {
     _signInWithGoogle().then((user) async {
       Navigator.pop(context);
       if (user != null) {
-        if (await APIs.userExists()) {
+        if (await (APIs.userExists())) {
+          // log('\nUser: ${user.user}');
+          // log('\nUserAdditionalInfo: ${user.additionalUserInfo}');
           Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (_) => const HomeScreen()));
+              context, MaterialPageRoute(builder: (_) => const ConfettiScreen()));
         } else {
-          await APIs.createUser().then((value) {
+          APIs.createUser().then((value) {
             Navigator.pushReplacement(
-                context, MaterialPageRoute(builder: (_) => const HomeScreen()));
+                context, MaterialPageRoute(builder: (_) => const ConfettiScreen()));
           });
         }
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          duration: Duration(milliseconds: 1500),
+          content: const Text(
+            "Logged in successfully 😃😃",
+            style: TextStyle(fontSize: 18),
+            textAlign: TextAlign.center,
+          ),
+          backgroundColor:
+              const Color.fromARGB(255, 106, 208, 255).withOpacity(.7),
+          behavior: SnackBarBehavior.floating,
+        ));
       }
     });
   }
@@ -77,7 +90,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       appBar: AppBar(
           automaticallyImplyLeading: false,
-          title: const Text("Welcome to We Chat")),
+          title: const Text("Welcome to Let's Chat!!")),
       body: Stack(
         children: [
           //app logo
@@ -92,7 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
             left: mq.width * .03,
             // right: mq.width * .15,
             width: mq.width * .95,
-            height: mq.height * .08,
+            height: mq.height * .06,
             child: ElevatedButton.icon(
               style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.lightGreen.shade300,
