@@ -2,10 +2,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:we_chat/helper/my_date_util.dart';
-import 'package:we_chat/screens/view_profile_screen.dart';
-import 'package:we_chat/widgets/message_card.dart';
+import 'package:lets_chat/helper/my_date_util.dart';
+import 'package:lets_chat/screens/view_profile_screen.dart';
+import 'package:lets_chat/widgets/message_card.dart';
 import '../api/api.dart';
 import '../main.dart';
 import '../models/chat_user.dart';
@@ -24,6 +25,12 @@ class _ChatScreenState extends State<ChatScreen> {
   List<Message> _list = [];
   final _textController = TextEditingController();
   bool _showEmoji = false;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -42,61 +49,79 @@ class _ChatScreenState extends State<ChatScreen> {
           },
           child: Scaffold(
             appBar: AppBar(
+              systemOverlayStyle:
+                  SystemUiOverlayStyle(statusBarColor: Colors.white),
+              backgroundColor: Colors.white70,
               automaticallyImplyLeading: false,
               flexibleSpace: _appBar(),
             ),
-            backgroundColor: const Color.fromARGB(255, 208, 233, 244),
-            body: Column(children: [
-              Expanded(
-                child: StreamBuilder(
-                  stream: APIs.getAllMessages(widget.user),
-                  builder: (context, snapshot) {
-                    switch (snapshot.connectionState) {
-                      case ConnectionState.waiting:
-                      case ConnectionState.none:
-                        return const SizedBox();
-                      case ConnectionState.active:
-                      case ConnectionState.done:
-                        final data = snapshot.data?.docs;
-                        _list = data
-                                ?.map((e) => Message.fromJson(e.data()))
-                                .toList() ??
-                            [];
+            // backgroundColor: Colors.black,
+            body: Container(
+              decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                begin: Alignment.topRight,
+                end: Alignment.bottomLeft,
+                colors: [
+                  Colors.teal,
+                  Colors.teal,
+                  Colors.indigo,
+                  Colors.red,
+                  Colors.yellow,
+                ],
+              )),
+              child: Column(children: [
+                Expanded(
+                  child: StreamBuilder(
+                    stream: APIs.getAllMessages(widget.user),
+                    builder: (context, snapshot) {
+                      switch (snapshot.connectionState) {
+                        case ConnectionState.waiting:
+                        case ConnectionState.none:
+                          return const SizedBox();
+                        case ConnectionState.active:
+                        case ConnectionState.done:
+                          final data = snapshot.data?.docs;
+                          _list = data
+                                  ?.map((e) => Message.fromJson(e.data()))
+                                  .toList() ??
+                              [];
 
-                        if (_list.isNotEmpty) {
-                          return ListView.builder(
-                              reverse: true,
-                              itemCount: _list.length,
-                              padding: EdgeInsets.only(top: mq.height * .01),
-                              physics: const BouncingScrollPhysics(),
-                              itemBuilder: (context, index) {
-                                return MessageCard(message: _list[index]);
-                              });
-                        } else {
-                          return const Center(
-                              child: Text(
-                            "Say Hii 👋👋",
-                            style: TextStyle(fontSize: 22),
-                          ));
-                        }
-                    }
-                  },
-                ),
-              ),
-              _chatInput(),
-              if (_showEmoji)
-                SizedBox(
-                  height: mq.height * .35,
-                  child: EmojiPicker(
-                    textEditingController: _textController,
-                    config: Config(
-                      bgColor: const Color.fromARGB(255, 234, 248, 255),
-                      columns: 8,
-                      emojiSizeMax: 32 * (Platform.isIOS ? 1.30 : 1.0),
-                    ),
+                          if (_list.isNotEmpty) {
+                            return ListView.builder(
+                                reverse: true,
+                                itemCount: _list.length,
+                                padding: EdgeInsets.only(top: mq.height * .01),
+                                physics: const BouncingScrollPhysics(),
+                                itemBuilder: (context, index) {
+                                  return MessageCard(message: _list[index]);
+                                });
+                          } else {
+                            return const Center(
+                                child: Text(
+                              "Say Hii 👋👋",
+                              style: TextStyle(
+                                  fontSize: 30, fontWeight: FontWeight.bold),
+                            ));
+                          }
+                      }
+                    },
                   ),
-                )
-            ]),
+                ),
+                _chatInput(),
+                if (_showEmoji)
+                  SizedBox(
+                    height: mq.height * .35,
+                    child: EmojiPicker(
+                      textEditingController: _textController,
+                      config: Config(
+                        bgColor: const Color.fromARGB(255, 234, 248, 255),
+                        columns: 8,
+                        emojiSizeMax: 32 * (Platform.isIOS ? 1.30 : 1.0),
+                      ),
+                    ),
+                  )
+              ]),
+            ),
           ),
         ),
       ),

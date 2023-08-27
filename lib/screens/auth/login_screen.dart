@@ -2,9 +2,9 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:we_chat/api/api.dart';
-import 'package:we_chat/helper/dialoges.dart';
-import 'package:we_chat/screens/confetti_screen.dart';
+import 'package:lets_chat/api/api.dart';
+import 'package:lets_chat/helper/dialoges.dart';
+import 'package:lets_chat/screens/confetti_screen.dart';
 
 import '../../main.dart';
 

@@ -2,8 +2,8 @@ import 'dart:math';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:confetti/confetti.dart';
-import 'package:we_chat/main.dart';
-import 'package:we_chat/screens/home_screen.dart';
+import 'package:lets_chat/main.dart';
+import 'package:lets_chat/screens/home_screen.dart';
 
 class ConfettiScreen extends StatefulWidget {
   const ConfettiScreen({super.key});
@@ -42,7 +42,7 @@ class _ConfettiScreenState extends State<ConfettiScreen> {
                 maxBlastForce: 3,
                 minBlastForce: 1,
                 emissionFrequency: 0.02,
-                numberOfParticles: 15,
+                numberOfParticles: 10,
               )),
           const SizedBox(
             height: 250,

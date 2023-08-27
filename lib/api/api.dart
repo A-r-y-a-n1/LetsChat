@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:we_chat/models/message.dart';
+import 'package:lets_chat/models/message.dart';
 
 import '../models/chat_user.dart';
 
@@ -18,7 +18,7 @@ class APIs {
       id: user.uid,
       name: user.displayName.toString(),
       email: user.email.toString(),
-      about: "Hey, I'm using We Chat!",
+      about: "Hey, I'm using Let's Chat!!",
       image: user.photoURL.toString(),
       createdAt: "",
       isOnline: false,
@@ -46,7 +46,7 @@ class APIs {
         id: user.uid,
         name: user.displayName.toString(),
         email: user.email.toString(),
-        about: "Hey, I'm using We Chat!",
+        about: "Hey, I'm using Let's Chat!!",
         image: user.photoURL.toString(),
         createdAt: time,
         isOnline: false,
@@ -73,7 +73,8 @@ class APIs {
         .update({'name': me.name, 'about': me.about});
   }
 
-  static Stream<QuerySnapshot<Map<String, dynamic>>> getUserInfo(ChatUser chatUser) {
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getUserInfo(
+      ChatUser chatUser) {
     return firestore
         .collection('users')
         .where('id', isEqualTo: chatUser.id)

@@ -1,9 +1,10 @@
+import 'package:animated_background/animated_background.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:we_chat/api/api.dart';
-import 'package:we_chat/models/chat_user.dart';
-import 'package:we_chat/screens/profile_screen.dart';
+import 'package:lets_chat/api/api.dart';
+import 'package:lets_chat/models/chat_user.dart';
+import 'package:lets_chat/screens/profile_screen.dart';
 import '../widgets/chat_user_card.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -13,13 +14,17 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen>
+    with SingleTickerProviderStateMixin {
   List<ChatUser> _list = [];
   final List<ChatUser> _searchList = [];
   bool _isSearching = false;
   @override
   void initState() {
     super.initState();
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+        systemNavigationBarColor: Colors.white, statusBarColor: Colors.white));
     APIs.getSelfInfo();
     SystemChannels.lifecycle.setMessageHandler((message) {
       if (message.toString().contains('pause')) {
@@ -119,40 +124,55 @@ class _HomeScreenState extends State<HomeScreen> {
           //     style: TextStyle(color: Colors.white),
           //   ),
           // ),
-          body: StreamBuilder(
-            stream: APIs.getAllUsers(),
-            builder: (context, snapshot) {
-              switch (snapshot.connectionState) {
-                case ConnectionState.waiting:
-                case ConnectionState.none:
-                  return const Center(child: CircularProgressIndicator());
-                case ConnectionState.active:
-                case ConnectionState.done:
-                  final data = snapshot.data?.docs;
-                  _list =
-                      data?.map((e) => ChatUser.fromJson(e.data())).toList() ??
-                          [];
+          body: AnimatedBackground(
+            vsync: this,
+            behaviour: RandomParticleBehaviour(
+                options: const ParticleOptions(
+                    baseColor: Colors.black,
+                    spawnMaxSpeed: 40,
+                    particleCount: 50,
+                    maxOpacity: 0.9,
+                    opacityChangeRate: 0.45,
+                    spawnMinRadius: 4,
+                    spawnMaxRadius: 5,
+                    minOpacity: 0.8,
+                    spawnMinSpeed: 10)),
+            child: StreamBuilder(
+              stream: APIs.getAllUsers(),
+              builder: (context, snapshot) {
+                switch (snapshot.connectionState) {
+                  case ConnectionState.waiting:
+                  case ConnectionState.none:
+                    return const Center(child: CircularProgressIndicator());
+                  case ConnectionState.active:
+                  case ConnectionState.done:
+                    final data = snapshot.data?.docs;
+                    _list = data
+                            ?.map((e) => ChatUser.fromJson(e.data()))
+                            .toList() ??
+                        [];
 
-                  if (_list.isNotEmpty) {
-                    return ListView.builder(
-                        itemCount:
-                            _isSearching ? _searchList.length : _list.length,
-                        physics: const BouncingScrollPhysics(),
-                        itemBuilder: (context, index) {
-                          return ChatUserCard(
-                              user: _isSearching
-                                  ? _searchList[index]
-                                  : _list[index]);
-                        });
-                  } else {
-                    return const Center(
-                        child: Text(
-                      "No Connections Found",
-                      style: TextStyle(fontSize: 22),
-                    ));
-                  }
-              }
-            },
+                    if (_list.isNotEmpty) {
+                      return ListView.builder(
+                          itemCount:
+                              _isSearching ? _searchList.length : _list.length,
+                          physics: const BouncingScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            return ChatUserCard(
+                                user: _isSearching
+                                    ? _searchList[index]
+                                    : _list[index]);
+                          });
+                    } else {
+                      return const Center(
+                          child: Text(
+                        "No Connections Found",
+                        style: TextStyle(fontSize: 22),
+                      ));
+                    }
+                }
+              },
+            ),
           ),
         ),
       ),

@@ -11,7 +11,7 @@ import '../main.dart';
 import '../models/chat_user.dart';
 import 'auth/login_screen.dart';
 
-import 'package:we_chat/helper/dialoges.dart';
+import 'package:lets_chat/helper/dialoges.dart';
 
 class ProfileScreen extends StatefulWidget {
   final ChatUser user;

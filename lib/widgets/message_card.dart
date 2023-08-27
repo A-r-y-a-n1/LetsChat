@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:we_chat/api/api.dart';
-import 'package:we_chat/helper/my_date_util.dart';
+import 'package:lets_chat/api/api.dart';
+import 'package:lets_chat/helper/my_date_util.dart';
 
 import '../main.dart';
 import '../models/message.dart';
@@ -39,7 +39,8 @@ class _MessageCardState extends State<MessageCard> {
             decoration: BoxDecoration(
                 color: Colors.lightBlueAccent.shade100,
                 borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: const Color.fromARGB(255, 64, 164, 246))),
+                border:
+                    Border.all(color: const Color.fromARGB(255, 64, 164, 246))),
             child: widget.message.type == Type.text
                 ? Text(widget.message.msg,
                     style: const TextStyle(fontSize: 15, color: Colors.black87))

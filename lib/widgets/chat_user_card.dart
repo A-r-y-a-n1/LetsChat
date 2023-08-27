@@ -1,11 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:we_chat/api/api.dart';
-import 'package:we_chat/helper/my_date_util.dart';
-import 'package:we_chat/models/message.dart';
-import 'package:we_chat/screens/chat_screen.dart';
-import 'package:we_chat/widgets/dialogs/profile_dialog.dart';
+import 'package:lets_chat/api/api.dart';
+import 'package:lets_chat/helper/my_date_util.dart';
+import 'package:lets_chat/models/message.dart';
+import 'package:lets_chat/screens/chat_screen.dart';
+import 'package:lets_chat/widgets/dialogs/profile_dialog.dart';
 
 import '../main.dart';
 import '../models/chat_user.dart';
@@ -24,7 +24,8 @@ class _ChatUserCardState extends State<ChatUserCard> {
   Widget build(BuildContext context) {
     return Card(
       margin: EdgeInsets.symmetric(horizontal: mq.width * 0.04, vertical: 4),
-      color: Colors.white24,
+      
+      color: Colors.white,
       elevation: 1,
       shadowColor: Colors.black38,
       shape: RoundedRectangleBorder(

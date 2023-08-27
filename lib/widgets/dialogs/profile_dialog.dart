@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:we_chat/models/chat_user.dart';
-import 'package:we_chat/main.dart';
+import 'package:lets_chat/models/chat_user.dart';
+import 'package:lets_chat/main.dart';
 
 class ProfileDialog extends StatelessWidget {
   const ProfileDialog({super.key, required this.user});
